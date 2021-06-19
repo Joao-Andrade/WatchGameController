@@ -1,0 +1,29 @@
+/* this file is left blank on purpose, if developer can't find classes he needs in framework, he can customize his
+app adding his own styles here
+ */
+ 
+ .contents {
+	display: flex;
+	display: -webkit-flex;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	height:320px;
+}
+
+
+.content_text {
+	font-weight:bold;
+	font-size:2em;
+	color:#fff;
+}
+
+button{
+	height: 60px;
+	width: 100%;
+	background-color: black;
+	color: white;
+}
+
+button:active {
+	color: grey;
+}
