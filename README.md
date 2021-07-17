@@ -2,6 +2,19 @@
 
 This project allows for anyone with a smartwatch with Tizes OS (for example, Samsung active 2) to control most racing games on a PC as long as both the PC and the smartwatch are connected to the same network.
 
+- [WatchGameController](#watchgamecontroller)
+  - [How it works](#how-it-works)
+  - [How to install](#how-to-install)
+    - [Pre requisites](#pre-requisites)
+    - [Smartwatch app](#smartwatch-app)
+      - [find API ip](#find-api-ip)
+      - [Unninstalling the app from smartwatch](#unninstalling-the-app-from-smartwatch)
+    - [API](#api)
+      - [Checking the virtual controller](#checking-the-virtual-controller)
+      - [Unninstalling API](#unninstalling-api)
+  - [Playing](#playing)
+    - [Tested games](#tested-games)
+
 ## How it works
 
 Simply put, the way it works is that the smartwatch sends the gravity sensor values, every 100ms, to the computer through an API, which in turn updates an xbox virtual controller that should control the game's vehicle.
@@ -105,3 +118,9 @@ The API is just a python executable, so to stop the API just press "ctrl+C" on t
 ## Playing
 
 After [installing](#how-to-install) both the smartwatch app and the API and making sure the data is being received by the API, just start the desired game and play : ). Just make sure. on the game settings, that the steering control is set to the left thumbstick and the left and right back triggers are the ones that control the speed.
+
+### Tested games
+
+ - Forza Horizon 4
+ - Cyberpunk 2077
+ - Need for Speed Heat
