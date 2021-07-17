@@ -86,9 +86,15 @@ To check that a virtual controller was initiated, open the Windows settings menu
 
 ![controller_1](documentation/controller_1.png)
 
+To make sure it is actually working, it is possible to check that the controller is actually changing the buttons values. To check that, click on the "devices and printers" on the "related settings" sub menu.
+
 ![controller_2](documentation/controller_2.png)
 
+A new window appears, where the controller should be visible as well.
+
 ![controller_3](documentation/controller_3.png)
+
+Click on the controller with the right mouse button and select "properties". A new window appears with all the available controller buttons. Move the watch or rotate to see the values change.
 
 ![controller_4](documentation/controller_4.png)
 
