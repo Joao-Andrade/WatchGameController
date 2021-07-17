@@ -90,11 +90,11 @@ To make sure it is actually working, it is possible to check that the controller
 
 ![controller_2](documentation/controller_2.png)
 
-A new window appears, where the controller should be visible as well.
+A new window appears, where the controller should be visible as well. Click on the controller with the right mouse button and select "properties" and new window appears.
 
 ![controller_3](documentation/controller_3.png)
 
-Click on the controller with the right mouse button and select "properties". A new window appears with all the available controller buttons. Move the watch or rotate to see the values change.
+Select the controller and click on "properties". A new window appears with all the available controller buttons. Move the watch or rotate to see the values change.
 
 ![controller_4](documentation/controller_4.png)
 
