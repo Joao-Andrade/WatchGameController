@@ -28,7 +28,7 @@ On my experience, the best starting position (although there may be variations t
 
  And that's it. This simulates the controller thumbstick (direction) and the back triggers (speed and break) so the car reflects the user actions.
 
-## How to install and run
+## How to install
 
 Before cloning the project, a few things are necessary to make it work.
 
@@ -79,3 +79,23 @@ To start the api, open the terminal on the API folder and execute the following 
 When the smartwatch starts sending information to the API, additionall information appears on the terminal.
 
 ![api_receive_data](documentation/api_receive_data.png)
+
+#### Checking the virtual controller
+
+To check that a virtual controller was initiated, open the Windows settings menu, and select the "Devices". In there it should be visible the controller.
+
+![controller_1](documentation/controller_1.png)
+
+![controller_2](documentation/controller_2.png)
+
+![controller_3](documentation/controller_3.png)
+
+![controller_4](documentation/controller_4.png)
+
+#### Unninstalling API
+
+The API is just a python executable, so to stop the API just press "ctrl+C" on the terminal that is executing the API, and to "unninstall", just delete the main.py file. 
+
+## Playing
+
+After [installing](#how-to-install) both the smartwatch app and the API and making sure the data is being received by the API, just start the desired game and play : ). Just make sure. on the game settings, that the steering control is set to the left thumbstick and the left and right back triggers are the ones that control the speed.
