@@ -28,7 +28,7 @@ On my experience, the best starting position (although there may be variations t
 
  And that's it. This simulates the controller thumbstick (direction) and the back triggers (speed and break) so the car reflects the user actions.
 
-## How to install
+## How to install and run
 
 Before cloning the project, a few things are necessary to make it work.
 
@@ -47,3 +47,35 @@ In order to place the app on the smartwatch, it is necessary to have on the PC s
 After having conenction between the smartwatch and Tizen Studio ([check pre requisites](#pre-requisites), in the Tizen Studio menu, select "File > Import". Select "Tizen > Tizen Project", click "Next" and select the folder from this github project "tizen_app". Click "Next" and select the "WatchGameController" project and click "Finish" to import it. The project should appear on the project explorer of Tizen Studio and the code can be analysed/changed from there.
 
 ![import_project](documentation/import_project.png)
+
+To run on the smartwatch, just click with the right mouse button on the project and select "Run As > Tizen Web Application" and a progress status should appear at the button showing the installation progress. Note that if the smartwatch is not correctly set up with the tizen studion, it may instead launch the emulator.
+
+![run_app](documentation/run_app.png)
+
+The application is fairly simple, as the user only needs to indicate the address for the api, which has a default value, but the user may need to change at least the ip. Only if the user decides to change the [API](#api) code, the endpoint and port may change as well. To know which ip the user needs to input, check [find API ip](#find-api-ip) section.
+
+![app](documentation/app.png)
+
+When everything is properly set up, click "start" and the sensor data is sent to the API every 100ms. The start button should change to "stop" for the user to stop sending data for whatever reason.
+
+#### find API ip
+
+To find the ip of the computer that is running the API, open the terminal and enter ```ipconfig``` (on Windows). Depending on the connection type, it can be the wireless or the ethernet ipv4 address. It should appear something like this:
+
+![find_ip](documentation/ip.png)
+
+#### Unninstalling the app from smartwatch
+
+To unninstall the app, navigate on the smartwatch menu until the app is found. Then, long press the app until a button with a minus symbol appears on top. When the user clicks on the minus button on top of the app, the app will be unninstalled.
+
+### API
+
+The API only has one endpoint, which is "/api/v1/sensors" and when the API is started, a virtual xbox controller is also initiated.
+
+To start the api, open the terminal on the API folder and execute the following command ```python3 main.py``` to start the API. Alternatively, use the full path for both the python 3 and the API, for example ```"C:/Program Files/Python39/python.exe" c:/Users/Joao/Documents/dev/api_v1/main.py```
+
+![api](documentation/api.png)
+
+When the smartwatch starts sending information to the API, additionall information appears on the terminal.
+
+![api_receive_data](documentation/api_receive_data.png)
