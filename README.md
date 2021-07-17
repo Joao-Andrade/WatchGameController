@@ -46,4 +46,4 @@ In order to place the app on the smartwatch, it is necessary to have on the PC s
 
 After having conenction between the smartwatch and Tizen Studio ([check pre requisites](#pre-requisites), in the Tizen Studio menu, select "File > Import". Select "Tizen > Tizen Project", click "Next" and select the folder from this github project "tizen_app". Click "Next" and select the "WatchGameController" project and click "Finish" to import it. The project should appear on the project explorer of Tizen Studio and the code can be analysed/changed from there.
 
-[!import_project](documentation/import_project.png)
+![import_project](documentation/import_project.png)
