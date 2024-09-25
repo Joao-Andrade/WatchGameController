@@ -3,6 +3,7 @@
 import flask
 import vgamepad as vg
 import numpy as np
+import time
 
 # initialize controller.
 gamepad = vg.VX360Gamepad()
@@ -56,7 +57,7 @@ def normalize_values(x, y):
     return new_x, new_y
 
 # update controller.
-def update_controller(x, y):
+def update_controller(x, y, enter_button, back_button):
     left_trigger = 0.0
     right_trigger = 0.0
     if x < -0.1:
@@ -69,9 +70,18 @@ def update_controller(x, y):
     gamepad.right_trigger_float(value_float=right_trigger)
     # direction
     gamepad.left_joystick_float(x_value_float=y, y_value_float=0)
+    # enter button
+    if enter_button:
+        gamepad.press_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_A)
+    else:
+        gamepad.release_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_A)
+    # back button
+    if back_button:
+        gamepad.press_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_B)
+    else:
+        gamepad.release_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_B)
     gamepad.update()
-
-
+    
 # receive sensor data.
 @app.route('/api/v1/sensors', methods=['POST'])
 def sensor_values():
@@ -79,18 +89,22 @@ def sensor_values():
     global x
     global y
     global index
+    global enter_button
+    global back_button
     x[index] = data["x"]
     y[index] = data["y"]
+    enter_button = data["enter"]
+    back_button = data["back"]
     index += 1
     # every 3 outputs, update controller
-    if index == 2:
+    if index == 1:
         index = 0
         # normalize data between -1 and 1
         normalized_x, normalized_y = normalize_values(np.mean(x), np.mean(y))
         # translate the values 
         correct_y = get_correct_coordinate(-normalized_y, normalized_x)
         correct_x = get_correct_coordinate(normalized_x, -normalized_y)
-        update_controller(correct_x, correct_y)
+        update_controller(correct_x, correct_y, enter_button, back_button)
     return data
 
 app.run(host="0.0.0.0", port=5000)
