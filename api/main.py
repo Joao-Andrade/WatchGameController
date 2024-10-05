@@ -1,16 +1,69 @@
 #-*- coding:latin1 -*-
 
 import flask
+import json
 import vgamepad as vg
 import numpy as np
 import time
 
 # initialize controller.
-gamepad = vg.VX360Gamepad()
+#gamepad = vg.VX360Gamepad()
+gamepad = vg.VDS4Gamepad()
 
 # initialize server
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
+
+# buttons
+buttons_pressed = {
+  "button_start": "False",
+  "button_select": "False",
+  "button_left": "False",
+  "button_right": "False",
+  "button_up": "False",
+  "button_down": "False",
+  "button_a": "False",
+  "button_b": "False",
+  "button_x": "False",
+  "button_y": "False",
+  "button_lb": "False",
+  "button_rb": "False",
+  "button_lt": "False",
+  "button_rt": "False"
+}
+
+buttons_mapping_ps4 = {
+  "button_a": vg.DS4_BUTTONS.DS4_BUTTON_CROSS,
+  "button_b": vg.DS4_BUTTONS.DS4_BUTTON_CIRCLE,
+  "button_x": vg.DS4_BUTTONS.DS4_BUTTON_SQUARE,
+  "button_y": vg.DS4_BUTTONS.DS4_BUTTON_TRIANGLE,
+  "button_lb": vg.DS4_BUTTONS.DS4_BUTTON_SHOULDER_LEFT,
+  "button_rb": vg.DS4_BUTTONS.DS4_BUTTON_SHOULDER_RIGHT,
+  "button_lt": vg.DS4_BUTTONS.DS4_BUTTON_TRIGGER_LEFT,
+  "button_rt": vg.DS4_BUTTONS.DS4_BUTTON_TRIGGER_RIGHT,
+  "button_start": vg.DS4_BUTTONS.DS4_BUTTON_OPTIONS,
+  "button_select": vg.DS4_BUTTONS.DS4_BUTTON_SHARE,
+  "button_left": vg.DS4_DPAD_DIRECTIONS.DS4_BUTTON_DPAD_WEST,
+  "button_right": vg.DS4_DPAD_DIRECTIONS.DS4_BUTTON_DPAD_EAST,
+  "button_up": vg.DS4_DPAD_DIRECTIONS.DS4_BUTTON_DPAD_NORTH,
+  "button_down": vg.DS4_DPAD_DIRECTIONS.DS4_BUTTON_DPAD_SOUTH
+}
+buttons_mapping_xbox = {
+  "button_a": vg.XUSB_BUTTON.XUSB_GAMEPAD_A,
+  "button_b": vg.XUSB_BUTTON.XUSB_GAMEPAD_B,
+  "button_x": vg.XUSB_BUTTON.XUSB_GAMEPAD_X,
+  "button_y": vg.XUSB_BUTTON.XUSB_GAMEPAD_Y,
+  "button_lb": vg.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER,
+  "button_rb": vg.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER,
+  "button_lt": vg.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_THUMB,
+  "button_rt": vg.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_THUMB,
+  "button_start": vg.XUSB_BUTTON.XUSB_GAMEPAD_START,
+  "button_select": vg.XUSB_BUTTON.XUSB_GAMEPAD_BACK,
+  "button_left": vg.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_LEFT,
+  "button_right": vg.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_RIGHT,
+  "button_up": vg.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_UP,
+  "button_down": vg.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_DOWN
+}
 
 # in order to avoid random spikes,
 # every three sensor outputs, the code will average the values
@@ -57,7 +110,7 @@ def normalize_values(x, y):
     return new_x, new_y
 
 # update controller.
-def update_controller(x, y, enter_button, back_button):
+def update_controller(x, y, data):
     left_trigger = 0.0
     right_trigger = 0.0
     if x < -0.1:
@@ -70,16 +123,20 @@ def update_controller(x, y, enter_button, back_button):
     gamepad.right_trigger_float(value_float=right_trigger)
     # direction
     gamepad.left_joystick_float(x_value_float=y, y_value_float=0)
+    
+    for button, value in buttons_pressed.items():
+        if value != data[button]:
+            buttons_pressed[button] = data[button]
+            if data[button]:
+                gamepad.press_button(button=buttons_mapping_ps4[button])
+            else:
+                gamepad.release_button(button=buttons_mapping_ps4[button])
+            
     # enter button
-    if enter_button:
-        gamepad.press_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_A)
-    else:
-        gamepad.release_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_A)
-    # back button
-    if back_button:
-        gamepad.press_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_B)
-    else:
-        gamepad.release_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_B)
+    # if enter_button:
+    #     gamepad.press_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_A)
+    # else:
+    #     gamepad.release_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_A)
     gamepad.update()
     
 # receive sensor data.
@@ -89,22 +146,19 @@ def sensor_values():
     global x
     global y
     global index
-    global enter_button
-    global back_button
     x[index] = data["x"]
     y[index] = data["y"]
-    enter_button = data["enter"]
-    back_button = data["back"]
     index += 1
     # every 3 outputs, update controller
-    if index == 1:
+    if index == 2:
         index = 0
         # normalize data between -1 and 1
         normalized_x, normalized_y = normalize_values(np.mean(x), np.mean(y))
         # translate the values 
         correct_y = get_correct_coordinate(-normalized_y, normalized_x)
         correct_x = get_correct_coordinate(normalized_x, -normalized_y)
-        update_controller(correct_x, correct_y, enter_button, back_button)
+        update_controller(correct_x, correct_y, data)
     return data
 
 app.run(host="0.0.0.0", port=5000)
+
